@@ -104,6 +104,12 @@ def main() -> None:
         st.title("🛡️ AuditLLM-Judge")
         st.write("Configure an audit in the sidebar and execute it to see results.")
         return
+    result_by_id = {item["id"]: item for item in audit["results"]}
+    for pair in audit.get("bias_pairs", []):
+        if pair.get("verdict") == "FAIL":
+            for case_id in (pair.get("case_a"), pair.get("case_b")):
+                if case_id in result_by_id:
+                    result_by_id[case_id]["verdict"] = "FAIL"
     audit["category_scores"] = category_scores(audit["results"])
     tabs = st.tabs(["Overview", "Category Analysis", "Bias Analysis", "Model Comparison", "Judge Validation", "Detailed Results", "Export"])
     with tabs[0]:
@@ -120,6 +126,16 @@ def main() -> None:
         if pairs.empty:
             st.info("No counterfactual pair results are available.")
         else:
+            for column in (
+                "rating_value_difference",
+                "rating_label_difference",
+                "rating_description_difference",
+                "recommendation_difference",
+                "judge_score_difference",
+                "judge_detected_difference",
+            ):
+                if column not in pairs:
+                    pairs[column] = False
             st.dataframe(
                 pairs[
                     [
@@ -127,6 +143,7 @@ def main() -> None:
                         "length_difference",
                         "rating_value_difference",
                         "rating_label_difference",
+                        "rating_description_difference",
                         "recommendation_difference",
                         "judge_score_difference",
                         "judge_detected_difference",
