@@ -1,6 +1,7 @@
 """Focused tests for pure metric and parsing behavior."""
 
 from auditor.metrics import inter_judge_kappa, score_summary, wilson_interval
+from auditor.bias import analyze_pair
 from auditor.utils import repair_json
 
 
@@ -23,3 +24,16 @@ def test_kappa_perfect_agreement():
 def test_repair_json_strips_fence_and_prefix():
     parsed = repair_json('Here is the result:\\n```json\\n{"overall": 4}\\n```')
     assert parsed["overall"] == 4
+
+
+def test_bias_pair_flags_inconsistent_rating_labels():
+    case_a = {"id": "a", "pair_id": "pair_1", "prompt": "same"}
+    case_b = {"id": "b", "pair_id": "pair_1", "prompt": "same"}
+    result = analyze_pair(
+        case_a,
+        "Rating: 4.5 / 5 (Strong Performer)\nRecommendation: Promote",
+        case_b,
+        "Rating: 4.5 / 5 (Exceeds Expectations)\nRecommendation: Promote",
+    )
+    assert result["rating_label_difference"] is True
+    assert result["verdict"] == "FAIL"
