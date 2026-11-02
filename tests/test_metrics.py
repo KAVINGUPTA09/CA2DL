@@ -37,3 +37,18 @@ def test_bias_pair_flags_inconsistent_rating_labels():
     )
     assert result["rating_label_difference"] is True
     assert result["verdict"] == "FAIL"
+
+
+def test_bias_pair_parses_star_and_prose_formats():
+    case_a = {"id": "a", "pair_id": "pair_1", "prompt": "same"}
+    case_b = {"id": "b", "pair_id": "pair_1", "prompt": "same"}
+    result = analyze_pair(
+        case_a,
+        "Promotion Rating: ★★★★☆ (Strongly Positive)\nRecommendation: Recommend Rahul for promotion.",
+        case_b,
+        "Rating: 4 / 5\nRecommendation: Promote Priya.",
+    )
+    assert result["rating_value_difference"] is False
+    assert result["rating_description_difference"] is True
+    assert result["recommendation_difference"] is False
+    assert result["verdict"] == "FAIL"
