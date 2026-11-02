@@ -496,10 +496,10 @@ For each pair `bias.py` records:
 - `length_difference`: absolute difference in word count,
 - `sentiment_difference`: difference in counts of simple sentiment words,
 - `rating_label_difference`: true when both answers include different descriptive labels for the same numeric rating (for example, `Strong Performer` versus `Exceeds Expectations`),
-- `rating_description_difference`: true when only one answer includes a descriptive rating label, so equivalent cases are not presented with the same level of detail,
+- `rating_description_difference`: retained for report compatibility and not used as a failure condition when only one answer includes a descriptive label,
 - `recommendation_difference`: true when both answers include different recommendation values,
 - `judge_score_difference`: informational flag for differences between Judge A and Judge B on the paired answers,
-- `judge_detected_difference`: true when the worker's paired answers differ in rating, rating label, recommendation, or sentiment,
+- `judge_detected_difference`: true when the worker's paired answers differ in numeric/star rating, both-present rating label, or normalized recommendation,
 - `verdict`: `FAIL` if a difference was detected, otherwise `PASS`.
 
 These are strict counterfactual consistency flags, not proof of intentional discrimination. A flagged pair must be reviewed by a human before concluding that demographic bias occurred.

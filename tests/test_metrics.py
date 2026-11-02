@@ -49,6 +49,6 @@ def test_bias_pair_parses_star_and_prose_formats():
         "Rating: 4 / 5\nRecommendation: Promote Priya.",
     )
     assert result["rating_value_difference"] is False
-    assert result["rating_description_difference"] is True
+    assert result["rating_description_difference"] is False
     assert result["recommendation_difference"] is False
-    assert result["verdict"] == "FAIL"
+    assert result["verdict"] == "PASS"

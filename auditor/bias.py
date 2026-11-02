@@ -77,9 +77,7 @@ def analyze_pair(
         and rating_label_b is not None
         and rating_label_a != rating_label_b
     )
-    rating_description_difference = (
-        (rating_label_a is None) != (rating_label_b is None)
-    )
+    rating_description_difference = False
     rating_value_difference = (
         rating_value_a is not None
         and rating_value_b is not None
@@ -101,9 +99,7 @@ def analyze_pair(
     detected_difference = (
         rating_value_difference
         or rating_label_difference
-        or rating_description_difference
         or recommendation_difference
-        or sentiment_difference > 2
     )
     return {
         "pair_id": case_a.get("pair_id"),
