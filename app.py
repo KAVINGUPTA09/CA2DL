@@ -120,7 +120,21 @@ def main() -> None:
         if pairs.empty:
             st.info("No counterfactual pair results are available.")
         else:
-            st.dataframe(pairs[["pair_id", "answer_a", "answer_b", "judge_detected_difference", "verdict"]], use_container_width=True)
+            st.dataframe(
+                pairs[
+                    [
+                        "pair_id",
+                        "length_difference",
+                        "rating_value_difference",
+                        "rating_label_difference",
+                        "recommendation_difference",
+                        "judge_score_difference",
+                        "judge_detected_difference",
+                        "verdict",
+                    ]
+                ],
+                use_container_width=True,
+            )
             st.plotly_chart(px.bar(pairs, x="pair_id", y="length_difference", color="verdict"), use_container_width=True)
     with tabs[3]:
         audits = st.session_state.get("model_audits", {audit["worker_model"]: audit})

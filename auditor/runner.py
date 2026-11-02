@@ -98,10 +98,14 @@ def run_audit(
         if len(pair_cases) == 2:
             first = next(item for item in results if item["id"] == pair_cases[0]["id"] and item["run"] == 1)
             second = next(item for item in results if item["id"] == pair_cases[1]["id"] and item["run"] == 1)
-            pairs.append(analyze_pair(
+            pair_result = analyze_pair(
                 by_id[first["id"]], first["worker_answer"], by_id[second["id"]],
                 second["worker_answer"], first["judge_a"], second["judge_a"],
-            ))
+            )
+            pairs.append(pair_result)
+            if pair_result["verdict"] == "FAIL":
+                first["verdict"] = "FAIL"
+                second["verdict"] = "FAIL"
     return {
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "worker_model": worker_model,
